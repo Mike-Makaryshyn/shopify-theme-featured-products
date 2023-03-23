@@ -1,0 +1,46 @@
+
+<div class="container" style="margin: 0px 20px">
+  <h2>Cart</h2>
+
+  {% if cart.empty? %}
+   <div style="color: red;">Hey, your cart is empty!</div>
+  {% else %}
+
+
+   {% form 'cart', cart %}
+
+      {% for item in cart.items %}
+         <div style="margin-bottom: 50px">
+            <img src="{{ item.image | image_url: width: 200 }}" />
+            <h3>{{ item.title }}</h3>
+            <h3> <strong>Quantity:</strong> {{ item.quantity }}</h3>
+            <p> {{ item.final_line_price | money_without_trailing_zeros }}</p>
+            <input style="width: 50px" name="updates[]" value="{{ item.quantity }}"/>
+            <a href="{{ item.url_to_remove }}">remove</a>
+         </div>
+      {% endfor %}
+
+      <p style="color: gray;">Total {{ cart.total_price | money_without_trailing_zeros }}</p>
+
+      <button 
+            type="submit"
+            class="default-btn"
+            name="checkout"
+            style="margin: 40px 0px"
+            >
+         Checkout
+      </button>
+      <button 
+            type="submit"
+            class="default-btn"
+            name="update"
+            style="margin: 40px 0px"
+            >
+         Update
+      </button>
+    
+   {% endform%}
+
+  {% endif %}
+
+</div>

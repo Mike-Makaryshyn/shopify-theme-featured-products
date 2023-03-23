@@ -1,0 +1,66 @@
+<div class="container">
+   <h1 class="featured-title">{{ collections['featured-products'].title }}</h1>
+
+   <div class="success_msg hide">The product has been added &#10003;</div>
+
+   <div class="featured-products">
+
+      {% assign featured_collection = collections['featured-products'] %}
+      {% assign cart_items = cart.items | map: 'product_id' %}
+
+      {% if collections['featured-products'].products.size < 1 %}
+         <strong>No products</strong>
+      {% else %}
+
+         {% for product in collections['featured-products'].products %}
+
+            {% for variant in product.variants %}
+               <span style="display: none" custom-id="{{variant.id}}" class="variant-money">
+                  {{ variant.price | money_without_trailing_zeros }}
+               </span>
+            {% endfor %}
+
+            {% unless cart_items contains product.id %}
+               <div class="single-product">
+                  <img class="featured-img" src="{{ product.featured_image | image_url}}"/>
+
+                  <h2 class="product-title">{{product.title}}<h2>
+                  {% form 'product', product %}
+                     {% if product.variants.size > 1 %}
+                        <select class="variant-select" name="id">
+                           {% for variant in product.variants %}
+                              <option data-image="{{ variant.featured_image | image_url }}" value="{{ variant.id }}">
+                                 {{ variant.title }}
+                              </option>
+                           {% endfor %}
+                        </select>
+                     {% else %}
+                        <select class="variant-select hide" name="id">
+                           {% for variant in product.variants %}
+                              <option value="{{ variant.id }}">
+                                 {{ variant.title }}
+                              </option>
+                           {% endfor %}
+                        </select>
+                     {% endif %}
+
+                     {% if product.compare_at_price > product.price %}
+                      <span class="dicount">20%</span>
+                     {% endif %}
+
+                  <div class="add_to_cart_wrapper">
+                     <button type="submit" class="default-btn add_to_cart">
+                           Add to cart - 
+                           <span class="featured-product__price">{{ product.price | money_without_trailing_zeros }}</span>
+                        </button>
+                  </div>
+                    
+                  {% endform %}
+               </div>
+            {% endunless %}
+         {% endfor %}
+      </div>
+      {% endif %}
+</div>
+
+
